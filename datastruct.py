@@ -25,7 +25,8 @@ class Node:
 
     def __init__(self, data: tuple[int, int]):
         # Replace the line below with your code
-        raise NotImplementedError
+        self._data = data
+        self.next = None    #istantiate as None first
 
     def __repr__(self) -> str:
         return f'Node({self.get()})'
@@ -40,7 +41,7 @@ class Node:
             tuple[int, int]
         """
         # Replace the line below with your code
-        raise NotImplementedError
+        return self._data
 
 
 class LinkedList:
@@ -76,7 +77,15 @@ class LinkedList:
             length of linkedlist as an integer (zero or positive)
         """
         # Replace the line below with your code
-        raise NotImplementedError
+        count = 0
+        if self._head is None:
+            return count
+        else:
+            current = self._head
+            while current is not None:
+                count += 1
+                current = current.next
+            return count
 
     def get(self, n: int) -> tuple[int, int]:
         """Returns item at n-th node.
@@ -91,8 +100,26 @@ class LinkedList:
         Raises
             IndexError if n >= length
         """
-        # Replace the line below with your code
-        raise NotImplementedError
+        # Ensure index is 0 or positive
+        if n < 0:
+            raise IndexError("n must be 0 or positive")
+        
+        # Attempt to reach the nth node
+        current = self._head
+        while (
+            current is not None 
+            and n > 0
+        ):
+            current = current.next
+            n -= 1
+
+        # If passed the tail, raise IndexError
+        if current is None:
+            raise IndexError("n >= length")
+        
+        # If nth node is reached, return item
+        else:
+            return current.get()
 
     def insert(self, n: int, item: tuple[int, int]) -> None:
         """Insert item into linkedlist at position n.
@@ -108,7 +135,27 @@ class LinkedList:
             IndexError if n > length
         """
         # Replace the line below with your code
-        raise NotImplementedError
+        node = Node(item)
+        if n < 0:
+            raise IndexError("n must be 0 or positive")
+        if n == 0:
+            node == Node(item)
+            node.next = self._head
+            self._head = node
+        else:
+            prev = self._head
+            while (
+                n > 1
+                and prev is not None
+            ):
+                prev = prev.next
+                n -= 1
+            if prev is None:
+                raise IndexError("n > length")
+            node = Node(item)
+            node.next = prev.next
+            prev.next = node
+
 
     def append(self, item: tuple[int, int]) -> None:
         """Append item at the end of linkedlist.
@@ -121,7 +168,16 @@ class LinkedList:
             None
         """
         # Replace the line below with your code
-        raise NotImplementedError
+        if self._head is None:
+            self._head = Node(item)
+
+        else:
+            current = self._head
+            while current.next is not None:
+                current = current.next
+            
+            current.next = Node(item)
+            
 
     def delete(self, n: int) -> None:
         """Delete n-th item from linkedlist.
@@ -134,7 +190,24 @@ class LinkedList:
             IndexError if n >= length
         """
         # Replace the line below with your code
-        raise NotImplementedError
+        node = Node(self)
+        if n < 0:
+            raise IndexError("n must be 0 or positive")
+        if self._head is None:
+            raise IndexError("linked list is empty")
+        if n == 0:
+            self._head = self._head.next
+            return
+        prev = self._head
+        while (
+            n > 1
+            and prev.next is not None
+        ):
+            prev = prev.next
+            n -= 1
+        if prev.next is None:
+            raise IndexError("n >= length")
+        prev.next = prev.next.next
        
     def contains(self, item: tuple[int, int]) -> bool:
         """Checks whether an item is in the linkedlist.
@@ -149,10 +222,30 @@ class LinkedList:
             otherwise False
         """
         # Replace the line below with your code
-        raise NotImplementedError
-
+        current = self._head
+        count = 1
+        while count != self.length():
+            if isinstance(current, Node):
+                if item != current.get():
+                    current = current.next
+                    count += 1
+                else:
+                    return True
+        return False
+            
 
 if __name__ == "__main__":
     # Write any test code here and run it with
     # `python datastruct.py`
-    pass
+    llist = LinkedList()
+    llist.append("a")
+    llist.append("b")
+    print("Index 0: ", llist.get(0))
+    print(llist.contains("a"))
+    print(llist.length())
+    print(llist.get(0))
+    llist.delete(0)
+    print(llist.length())
+    print(llist.get(0))
+    llist.delete(0)
+    print(llist.length())
